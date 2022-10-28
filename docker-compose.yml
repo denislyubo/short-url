@@ -1,6 +1,23 @@
 version: '3'
 
 services:
-  api:
-
   db:
+    build:
+      context: .
+      dockerfile: db/Dockerfile
+    ports:
+      - 6379:6379
+
+  api:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    env_file:
+      - api/.env
+    stdin_open: true
+    tty: true
+    ports:
+      - 3000:3000
+    depends_on:
+      - db

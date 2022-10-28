@@ -1,16 +1,16 @@
 FROM golang:alpine as builder
 
-RUN mkdir /build
+COPY . /build
 
-ADD . /build/
+WORKDIR /build/api
 
-WORKDIR /build
+RUN go mod tidy
 
 RUN go build -o main .
 
 #stage 2
 
-FROM alpine 
+FROM alpine
 
 RUN adduser -S -D -H -h /app appuser
 
@@ -18,7 +18,8 @@ USER appuser
 
 COPY . /app
 
-COPY --from=builder /build/main /app/
+COPY --from=builder /build/api/.env /app/
+COPY --from=builder /build/api/main /app/
 
 
 WORKDIR /app
