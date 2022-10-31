@@ -1,4 +1,4 @@
-package routes
+package controllers
 
 import (
 	"math/rand"
@@ -33,12 +33,38 @@ type response struct {
 // @Tags root
 // @Accept application/json
 // @Produce json
-// @Param request body routes.request true "query params"
-// @Success 200 {object} routes.response
+// @Param request body controllers.request true "query params"
+// @Success 200 {object} controllers.response
 // @Failure 403 {object} map[string]interface{} "desc"
 // @Failure 503 {object} map[string]interface{} "desc"
-// @Router /api/v1 [post]
+// @Security ApiKeyAuth
+// @Router /api/v1/shorten [post]
 func Shorten(ctx *fiber.Ctx) error {
+	// Get now time.
+	now := time.Now().Unix()
+
+	// Get claims from JWT.
+	claims, err := helpers.ExtractTokenMetadata(ctx)
+	if err != nil {
+		// Return status 500 and JWT parse error.
+		return ctx.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"error": true,
+			"msg":   err.Error(),
+		})
+	}
+
+	// Set expiration time from JWT data of current book.
+	expires := claims.Expires
+
+	// Checking, if now time greather than expiration from JWT.
+	if now > expires {
+		// Return status 401 and unauthorized error message.
+		return ctx.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
+			"error": true,
+			"msg":   "unauthorized, check expiration time of your token",
+		})
+	}
+
 	body := &request{}
 
 	if err := ctx.BodyParser(&body); err != nil {

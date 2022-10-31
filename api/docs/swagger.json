@@ -1,73 +1,21 @@
 {
-    "schemes": [
-        "http",
-        "https"
-    ],
     "swagger": "2.0",
     "info": {
-        "description": "This is a sample server.",
-        "title": "Fiber Swagger Example API",
+        "description": "This is an auto-generated API Docs.",
+        "title": "API",
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
             "name": "API Support",
-            "url": "http://www.swagger.io/support",
-            "email": "support@swagger.io"
+            "email": "your@mail.com"
         },
         "license": {
             "name": "Apache 2.0",
             "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
         },
-        "version": "2.0"
+        "version": "1.0"
     },
-    "host": "localhost:3000",
-    "basePath": "/",
     "paths": {
-        "/api/v1": {
-            "post": {
-                "description": "returns not shortened url.",
-                "consumes": [
-                    "application/json"
-                ],
-                "tags": [
-                    "root"
-                ],
-                "summary": "Returns original URL if exists.",
-                "parameters": [
-                    {
-                        "description": "query params",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/routes.request"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/routes.response"
-                        }
-                    },
-                    "403": {
-                        "description": "desc",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "503": {
-                        "description": "desc",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            }
-        },
-        "/resolve/{url}": {
+        "/api/v1/resolve/{url}": {
             "get": {
                 "description": "returns not shortened url.",
                 "consumes": [
@@ -88,7 +36,10 @@
                 ],
                 "responses": {
                     "301": {
-                        "description": "Moved Permanently"
+                        "description": "redirected",
+                        "schema": {
+                            "type": "string"
+                        }
                     },
                     "400": {
                         "description": "desc",
@@ -113,10 +64,86 @@
                     }
                 }
             }
+        },
+        "/api/v1/shorten": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "returns not shortened url.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "root"
+                ],
+                "summary": "Returns original URL if exists.",
+                "parameters": [
+                    {
+                        "description": "query params",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.response"
+                        }
+                    },
+                    "403": {
+                        "description": "desc",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "503": {
+                        "description": "desc",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/token/new": {
+            "get": {
+                "description": "Create a new access token.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Token"
+                ],
+                "summary": "create a new access token",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
-        "routes.request": {
+        "controllers.request": {
             "type": "object",
             "properties": {
                 "expiry": {
@@ -130,7 +157,7 @@
                 }
             }
         },
-        "routes.response": {
+        "controllers.response": {
             "type": "object",
             "properties": {
                 "expiry": {
@@ -149,6 +176,13 @@
                     "type": "string"
                 }
             }
+        }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
         }
     }
 }

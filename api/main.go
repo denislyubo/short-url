@@ -6,10 +6,11 @@ import (
 	"time"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/middleware/cors"
-	"github.com/gofiber/fiber/v2/middleware/logger"
-	"github.com/gofiber/fiber/v2/middleware/recover"
 	"github.com/joho/godotenv"
+	"github.com/mahadevans87/short-url/configs"
+	"github.com/mahadevans87/short-url/controllers"
+	"github.com/mahadevans87/short-url/helpers"
+	"github.com/mahadevans87/short-url/middleware"
 	"github.com/mahadevans87/short-url/routes"
 
 	"github.com/gofiber/swagger"
@@ -18,8 +19,8 @@ import (
 )
 
 func setupRoutes(app *fiber.App) {
-	app.Get("/resolve/:url", routes.Resolve)
-	app.Post("/api/v1", routes.Shorten)
+	app.Get("/resolve/:url", controllers.Resolve)
+	app.Post("/api/v1", controllers.Shorten)
 
 	app.Get("/swagger/*", swagger.HandlerDefault) // default
 
@@ -38,20 +39,18 @@ func setupRoutes(app *fiber.App) {
 	}))
 }
 
-// @title Fiber Swagger Example API
-// @version 2.0
-// @description This is a sample server.
+// @title API
+// @version 1.0
+// @description This is an auto-generated API Docs.
 // @termsOfService http://swagger.io/terms/
-
 // @contact.name API Support
-// @contact.url http://www.swagger.io/support
-// @contact.email support@swagger.io
-
+// @contact.email your@mail.com
 // @license.name Apache 2.0
 // @license.url http://www.apache.org/licenses/LICENSE-2.0.html
-
-// @host localhost:3000
-// @BasePath /
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
+// @BasePath /api
 // @schemes http https
 func main() {
 	err := godotenv.Load()
@@ -61,21 +60,21 @@ func main() {
 
 	rand.Seed(time.Now().UnixNano())
 
-	app := fiber.New()
-	app.Use(
-		logger.New(),
-		recover.New(),
-		cors.New(),
-	)
-	app.Use(cors.New(cors.Config{
-		AllowOrigins:     "*",
-		AllowMethods:     "*",
-		AllowHeaders:     "*",
-		AllowCredentials: true,
-	}))
-	setupRoutes(app)
-	app.Listen(":3000") // + os.Getenv("APP_PORT"))
-	// base62EncodedString := helpers.Base62Encode(9999999)
-	// fmt.Println(base62EncodedString)
-	// fmt.Println(helpers.Base62Decode(base62EncodedString))
+	// Define Fiber config.
+	config := configs.FiberConfig()
+
+	// Define a new Fiber app with config.
+	app := fiber.New(config)
+
+	// Middlewares.
+	middleware.FiberMiddleware(app) // Register Fiber's middleware for app.
+
+	// Routes.
+	routes.SwaggerRoute(app)  // Register a route for API Docs (Swagger).
+	routes.PublicRoutes(app)  // Register a public routes for app.
+	routes.PrivateRoutes(app) // Register a private routes for app.
+	routes.NotFoundRoute(app) // Register route for 404 Error.
+
+	// Start server (with graceful shutdown).
+	helpers.StartServer(app)
 }

@@ -13,8 +13,7 @@ const docTemplate = `{
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
             "name": "API Support",
-            "url": "http://www.swagger.io/support",
-            "email": "support@swagger.io"
+            "email": "your@mail.com"
         },
         "license": {
             "name": "Apache 2.0",
@@ -25,52 +24,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/v1": {
-            "post": {
-                "description": "returns not shortened url.",
-                "consumes": [
-                    "application/json"
-                ],
-                "tags": [
-                    "root"
-                ],
-                "summary": "Returns original URL if exists.",
-                "parameters": [
-                    {
-                        "description": "query params",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/routes.request"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/routes.response"
-                        }
-                    },
-                    "403": {
-                        "description": "desc",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    },
-                    "503": {
-                        "description": "desc",
-                        "schema": {
-                            "type": "object",
-                            "additionalProperties": true
-                        }
-                    }
-                }
-            }
-        },
-        "/resolve/{url}": {
+        "/api/v1/resolve/{url}": {
             "get": {
                 "description": "returns not shortened url.",
                 "consumes": [
@@ -91,7 +45,10 @@ const docTemplate = `{
                 ],
                 "responses": {
                     "301": {
-                        "description": "Moved Permanently"
+                        "description": "redirected",
+                        "schema": {
+                            "type": "string"
+                        }
                     },
                     "400": {
                         "description": "desc",
@@ -116,10 +73,86 @@ const docTemplate = `{
                     }
                 }
             }
+        },
+        "/api/v1/shorten": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "returns not shortened url.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "root"
+                ],
+                "summary": "Returns original URL if exists.",
+                "parameters": [
+                    {
+                        "description": "query params",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controllers.request"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/controllers.response"
+                        }
+                    },
+                    "403": {
+                        "description": "desc",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    },
+                    "503": {
+                        "description": "desc",
+                        "schema": {
+                            "type": "object",
+                            "additionalProperties": true
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/token/new": {
+            "get": {
+                "description": "Create a new access token.",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Token"
+                ],
+                "summary": "create a new access token",
+                "responses": {
+                    "200": {
+                        "description": "ok",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
-        "routes.request": {
+        "controllers.request": {
             "type": "object",
             "properties": {
                 "expiry": {
@@ -133,7 +166,7 @@ const docTemplate = `{
                 }
             }
         },
-        "routes.response": {
+        "controllers.response": {
             "type": "object",
             "properties": {
                 "expiry": {
@@ -153,17 +186,24 @@ const docTemplate = `{
                 }
             }
         }
+    },
+    "securityDefinitions": {
+        "ApiKeyAuth": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
     }
 }`
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "2.0",
-	Host:             "localhost:3000",
-	BasePath:         "/",
-	Schemes:          []string{"http", "https"},
-	Title:            "Fiber Swagger Example API",
-	Description:      "This is a sample server.",
+	Version:          "1.0",
+	Host:             "",
+	BasePath:         "",
+	Schemes:          []string{},
+	Title:            "API",
+	Description:      "This is an auto-generated API Docs.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

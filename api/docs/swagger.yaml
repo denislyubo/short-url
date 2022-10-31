@@ -1,6 +1,5 @@
-basePath: /
 definitions:
-  routes.request:
+  controllers.request:
     properties:
       expiry:
         type: integer
@@ -9,7 +8,7 @@ definitions:
       url:
         type: string
     type: object
-  routes.response:
+  controllers.response:
     properties:
       expiry:
         type: integer
@@ -22,51 +21,19 @@ definitions:
       url:
         type: string
     type: object
-host: localhost:3000
 info:
   contact:
-    email: support@swagger.io
+    email: your@mail.com
     name: API Support
-    url: http://www.swagger.io/support
-  description: This is a sample server.
+  description: This is an auto-generated API Docs.
   license:
     name: Apache 2.0
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   termsOfService: http://swagger.io/terms/
-  title: Fiber Swagger Example API
-  version: "2.0"
+  title: API
+  version: "1.0"
 paths:
-  /api/v1:
-    post:
-      consumes:
-      - application/json
-      description: returns not shortened url.
-      parameters:
-      - description: query params
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/routes.request'
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/routes.response'
-        "403":
-          description: desc
-          schema:
-            additionalProperties: true
-            type: object
-        "503":
-          description: desc
-          schema:
-            additionalProperties: true
-            type: object
-      summary: Returns original URL if exists.
-      tags:
-      - root
-  /resolve/{url}:
+  /api/v1/resolve/{url}:
     get:
       consumes:
       - '*/*'
@@ -79,7 +46,9 @@ paths:
         type: string
       responses:
         "301":
-          description: Moved Permanently
+          description: redirected
+          schema:
+            type: string
         "400":
           description: desc
           schema:
@@ -98,7 +67,58 @@ paths:
       summary: Returns original URL if exists.
       tags:
       - root
-schemes:
-- http
-- https
+  /api/v1/shorten:
+    post:
+      consumes:
+      - application/json
+      description: returns not shortened url.
+      parameters:
+      - description: query params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/controllers.request'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/controllers.response'
+        "403":
+          description: desc
+          schema:
+            additionalProperties: true
+            type: object
+        "503":
+          description: desc
+          schema:
+            additionalProperties: true
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Returns original URL if exists.
+      tags:
+      - root
+  /api/v1/token/new:
+    get:
+      consumes:
+      - application/json
+      description: Create a new access token.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ok
+          schema:
+            type: string
+      summary: create a new access token
+      tags:
+      - Token
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"

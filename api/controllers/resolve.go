@@ -1,4 +1,4 @@
-package routes
+package controllers
 
 import (
 	"github.com/go-redis/redis/v8"
@@ -20,7 +20,7 @@ type JSONResult struct {
 // @Failure      400 {object} map[string]interface{} "desc"
 // @Failure      404 {object} map[string]interface{} "desc"
 // @Failure      500 {object} map[string]interface{} "desc"
-// @Router /resolve/{url} [get]
+// @Router /api/v1/resolve/{url} [get]
 func Resolve(ctx *fiber.Ctx) error {
 	url := ctx.Params("url")
 
