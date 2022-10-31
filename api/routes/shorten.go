@@ -16,7 +16,7 @@ import (
 type request struct {
 	URL         string        `json:"url"`
 	CustomShort string        `json:"short"`
-	Expiry      time.Duration `json:"expiry"`
+	Expiry      time.Duration `json:"expiry" swaggertype:"primitive,integer"`
 }
 
 type response struct {
@@ -27,6 +27,16 @@ type response struct {
 	XRateLimitReset time.Duration `json:"rate_limit_reset"`
 }
 
+// Shorten godoc
+// @Summary Returns original URL if exists.
+// @Description returns not shortened url.
+// @Tags root
+// @Accept application/json
+// @Param request body routes.request true "query params"
+// @Success 200 {object} routes.response
+// @Failure 403 {object} map[string]interface{} "desc"
+// @Failure 503 {object} map[string]interface{} "desc"
+// @Router /api/v1 [post]
 func Shorten(ctx *fiber.Ctx) error {
 	body := &request{}
 

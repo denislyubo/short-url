@@ -1,0 +1,104 @@
+basePath: /
+definitions:
+  routes.request:
+    properties:
+      expiry:
+        type: integer
+      short:
+        type: string
+      url:
+        type: string
+    type: object
+  routes.response:
+    properties:
+      expiry:
+        type: integer
+      rate_limit:
+        type: integer
+      rate_limit_reset:
+        type: integer
+      short:
+        type: string
+      url:
+        type: string
+    type: object
+host: localhost:3000
+info:
+  contact:
+    email: support@swagger.io
+    name: API Support
+    url: http://www.swagger.io/support
+  description: This is a sample server.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Fiber Swagger Example API
+  version: "2.0"
+paths:
+  /api/v1:
+    post:
+      consumes:
+      - application/json
+      description: returns not shortened url.
+      parameters:
+      - description: query params
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/routes.request'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/routes.response'
+        "403":
+          description: desc
+          schema:
+            additionalProperties: true
+            type: object
+        "503":
+          description: desc
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Returns original URL if exists.
+      tags:
+      - root
+  /resolve/{url}:
+    get:
+      consumes:
+      - '*/*'
+      description: returns not shortened url.
+      parameters:
+      - description: shortened url
+        in: path
+        name: url
+        required: true
+        type: string
+      responses:
+        "301":
+          description: Moved Permanently
+        "400":
+          description: desc
+          schema:
+            additionalProperties: true
+            type: object
+        "404":
+          description: desc
+          schema:
+            additionalProperties: true
+            type: object
+        "500":
+          description: desc
+          schema:
+            additionalProperties: true
+            type: object
+      summary: Returns original URL if exists.
+      tags:
+      - root
+schemes:
+- http
+- https
+swagger: "2.0"

@@ -6,6 +6,21 @@ import (
 	"github.com/mahadevans87/short-url/database"
 )
 
+type JSONResult struct {
+	Error string `json:"error"`
+}
+
+// Resolve godoc
+// @Summary Returns original URL if exists.
+// @Description returns not shortened url.
+// @Tags root
+// @Accept */*
+// @Param url path string true "shortened url"
+// @Success      301
+// @Failure      400 {object} map[string]interface{} "desc"
+// @Failure      404 {object} map[string]interface{} "desc"
+// @Failure      500 {object} map[string]interface{} "desc"
+// @Router /resolve/{url} [get]
 func Resolve(ctx *fiber.Ctx) error {
 	url := ctx.Params("url")
 

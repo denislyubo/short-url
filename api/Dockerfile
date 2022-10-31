@@ -18,9 +18,7 @@ USER appuser
 
 COPY . /app
 
-COPY --from=builder /build/api/.env /app/
-COPY --from=builder /build/api/main /app/
-
+COPY --from=builder ["/build/api/.env", "/build/api/main", "/app/"]
 
 WORKDIR /app
 
