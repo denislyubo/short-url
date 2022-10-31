@@ -16,7 +16,7 @@ type JSONResult struct {
 // @Tags root
 // @Accept */*
 // @Param url path string true "shortened url"
-// @Success      301
+// @Success      301 {string} status "redirected"
 // @Failure      400 {object} map[string]interface{} "desc"
 // @Failure      404 {object} map[string]interface{} "desc"
 // @Failure      500 {object} map[string]interface{} "desc"

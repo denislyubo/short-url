@@ -32,6 +32,7 @@ type response struct {
 // @Description returns not shortened url.
 // @Tags root
 // @Accept application/json
+// @Produce json
 // @Param request body routes.request true "query params"
 // @Success 200 {object} routes.response
 // @Failure 403 {object} map[string]interface{} "desc"
