@@ -1,7 +1,6 @@
 package helpers
 
 import (
-	"fmt"
 	"os"
 	"strconv"
 	"time"
@@ -33,5 +32,5 @@ func GenerateNewAccessToken() (string, error) {
 		return "", err
 	}
 
-	return fmt.Sprintf("Bearer %s", t), nil
+	return t, nil
 }
